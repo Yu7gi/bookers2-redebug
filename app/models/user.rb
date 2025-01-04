@@ -13,7 +13,11 @@ class User < ApplicationRecord
   validates :name, length: { minimum: 2, maximum: 20 }, uniqueness: true
   validates :introduction, length: {maximum: 50}
 
-  
+  has_many :followers, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  has_many :followeds, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+
+  has_many :relation_followings, through: :followers, source: :followed
+  has_many :relation_followers, through: :followeds, source: :follower
   
   def get_profile_image
     (profile_image.attached?) ? profile_image : 'no_image.jpg'
