@@ -13,11 +13,23 @@ class User < ApplicationRecord
   validates :name, length: { minimum: 2, maximum: 20 }, uniqueness: true
   validates :introduction, length: {maximum: 50}
 
-  has_many :followers, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
-  has_many :followeds, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+  has_many :followings, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  has_many :followers, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
 
-  has_many :relation_followings, through: :followers, source: :followed
-  has_many :relation_followers, through: :followeds, source: :follower
+  has_many :relation_followings, through: :followings, source: :followed
+  has_many :relation_followers, through: :followers, source: :follower
+
+  def follow(user)
+    followings.create(followed_id: user.id)
+  end
+
+  def unfollow(user)
+    followings.find_by(followed_id: user.id).destroy
+  end
+
+  def following?(user)
+    relation_followings.include?(user)
+  end
   
   def get_profile_image
     (profile_image.attached?) ? profile_image : 'no_image.jpg'
