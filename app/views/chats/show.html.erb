@@ -1,0 +1,25 @@
+<div class="container ml-5">
+  <h2 id="room" data-room="<%= @room.id %>" data-user="<%= current_user.id %>"><%= @user.name %> さんとのチャット</h2>
+
+  <div class="message" style="width: 500px;" >
+    <% @chats.each do |chat| %>
+      <% if chat.user_id == current_user.id %>
+        <%= render "chats/chat", chat: chat %>
+      <% else %>
+        <div class="left-container d-flex">
+          <p><%= chat.message %></p>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="errors">
+    <%= render "layouts/errors", obj: @chat %>
+  </div>
+
+  <%= form_with model: @chat, data: {remote: true} do |f| %>
+    <%= f.text_field :message %>
+    <%= f.submit "送信" %>
+    <%= f.hidden_field :room_id %>
+  <% end %>
+</div> 

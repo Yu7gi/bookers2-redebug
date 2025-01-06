@@ -1,5 +1,6 @@
 class RelationshipsController < ApplicationController
   before_action :authenticate_user!
+  before_action :hide_search, only: [:followings, :followers]
 
   def create
     user = User.find(params[:user_id])
@@ -21,5 +22,11 @@ class RelationshipsController < ApplicationController
   def followers
     user = User.find(params[:user_id])
     @users = user.relation_followers
+  end
+
+  private
+
+  def hide_search
+    @show_search = false
   end
 end

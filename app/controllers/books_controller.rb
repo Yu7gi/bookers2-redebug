@@ -1,5 +1,6 @@
 class BooksController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update]
+  before_action :hide_search, only: [:show, :edit]
 
   def show
     @book = Book.find(params[:id])
@@ -45,6 +46,10 @@ class BooksController < ApplicationController
   end
 
   private
+
+  def hide_search
+    @show_search = false
+  end
 
   def book_params
     params.require(:book).permit(:title, :body)

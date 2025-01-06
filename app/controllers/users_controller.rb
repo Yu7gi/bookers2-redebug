@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :ensure_correct_user, only: [:edit, :update]
+  before_action :hide_search, only: [:show, :edit]
 
   def show
     @user = User.find(params[:id])
@@ -26,6 +27,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def hide_search
+    @show_search = false
+  end
 
   def user_params
     params.require(:user).permit(:name, :introduction, :profile_image)
